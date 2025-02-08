@@ -1,0 +1,10 @@
+/.ipynb_checkpoints
+/.venv
+**/__pycache__/
+/runs
+/Training
+project_report_info.md
+tempCodeRunnerFile.py
+yolo_inference.py
+yolo11x.pt
+/models
