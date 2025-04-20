@@ -23,24 +23,19 @@ def main():
     player_tracker = PlayerTracker(model_path='yolo11x')
     player_detections = player_tracker.detect_frames(frames, read_from_stub=True, stub_path='./tracker_stubs/player_detections.pkl')
 
-    # Detect ball
-    ball_tracker = BallTracker(model_path='models/yolo5_last.pt')
-    ball_detections = ball_tracker.detect_frames(frames, read_from_stub=True, stub_path='tracker_stubs/ball_detections.pkl', interpolate=True)
+    # Detect ball using TrackNet model
+    ball_tracker = BallTracker(model_path='model_best.pt', use_tracknet=True)
+    ball_detections = ball_tracker.detect_frames(frames, read_from_stub=True, stub_path='tracker_stubs/ball_detections.pkl')
 
     # Draw court lines
     court_line_model_path = "models/keypoints_model.pth"
     court_line_detector = CourtLineDetector(court_line_model_path)
     keypoints = court_line_detector.predict(frames[0])
-    output_frames = court_line_detector.draw_keypoints_on_video(frames, keypoints, static_points=True)
 
     # Filter Players
     filtered_player_detections = player_tracker.choose_and_filter_players(keypoints, player_detections)
 
-    # Draw bounding boxes
-    output_frames = ball_tracker.draw_bboxes(output_frames, ball_detections)
-    output_frames = player_tracker.draw_bboxes(output_frames, filtered_player_detections)
-
-    # Draw mini court
+    # Generate mini court
     mini_court = MiniCourt(frames[0])
 
     # Detect ball shots
@@ -124,10 +119,10 @@ def main():
     # Draw output
     ## Draw Player Bounding Boxes
     output_frames= player_tracker.draw_bboxes(frames, player_detections)
-    output_frames= ball_tracker.draw_bboxes(output_frames, ball_detections)
+    output_frames= ball_tracker.draw_ball_circles(output_frames, ball_detections)
 
     ## Draw court Keypoints
-    output_frames  = court_line_detector.draw_keypoints_on_video(output_frames, keypoints)
+    # output_frames  = court_line_detector.draw_keypoints_on_video(output_frames, keypoints)
 
     # Draw Mini Court
     output_frames = mini_court.draw_mini_court(output_frames)
