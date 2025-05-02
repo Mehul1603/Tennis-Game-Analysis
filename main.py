@@ -160,7 +160,7 @@ def main():
     output_frames= ball_tracker.draw_ball_circles(output_frames, ball_detections)
 
     ## Draw court Keypoints
-    # output_frames  = court_line_detector.draw_keypoints_on_video(output_frames, keypoints)
+    output_frames  = court_line_detector.draw_keypoints_on_video(output_frames, keypoints)
 
     # Draw Mini Court
     output_frames = mini_court.draw_mini_court(output_frames)
